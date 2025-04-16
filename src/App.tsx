@@ -4,16 +4,19 @@ import HomePage from './pages/HomePage';
 import RegisterPage from './pages/auth/Register';
 import LoginPage from './pages/auth/Login';
 import Dashboard from './pages/Dashboard';
+import MainLayout from './layouts/MainLayout';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+    <MainLayout>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </MainLayout>
   );
 }
 
