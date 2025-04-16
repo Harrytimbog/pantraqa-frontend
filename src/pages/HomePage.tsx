@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import BackgroundIcons from "../components/BackgroundIcons";
 import GetStartedButton from "../components/UI/GetStartedButton";
 
@@ -20,14 +21,14 @@ function HomePage() {
 
                 <div className="mt-8 flex flex-wrap justify-center gap-4">
                     <GetStartedButton />
-                    <button
+                    <Link to="/learn-more"
                         className="px-6 py-3 rounded-md border border-accent text-accent bg-white 
              hover:bg-gray-100 hover:text-accent 
              font-medium transition-all duration-200 ease-in-out 
              shadow-sm hover:shadow-md active:scale-95"
                     >
                         Learn More
-                    </button>
+                    </Link>
 
                 </div>
             </div>
