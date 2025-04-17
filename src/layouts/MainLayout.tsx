@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     const handleLogout = () => {
         localStorage.removeItem('token');
         setIsLoggedIn(false); // update state manually
+        toast.success('Logged out successfully');
         navigate('/login');
     };
 
@@ -42,7 +44,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     )}
                 </nav>
             </header>
-
+            <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
             <main className="bg-transparent">{children}</main>
         </div>
     );

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 interface Drink {
     id: number;
@@ -60,7 +61,7 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
                 storageLocationId: Number(storageLocationId),
                 quantity: Number(quantity),
             });
-
+            toast.success('Stock updated successfully!');
             setDrinkId('');
             setStorageLocationId('');
             setQuantity('');
@@ -73,7 +74,7 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
 
         } catch (err: unknown) {
             console.error('Full error:', err);
-
+            toast.error('Failed to update stock.');
             if (axios.isAxiosError(err)) {
                 const message = err.response?.data?.error || err.message || 'Stock update failed';
                 console.error('Axios Error:', message);

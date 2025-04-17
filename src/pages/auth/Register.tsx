@@ -4,6 +4,7 @@ import AuthLayout from '../../components/UI/AuthLayout';
 import axios from 'axios';
 import api from '../../lib/axios';
 import { useAuth } from '../../context/AuthContext';
+import toast from 'react-hot-toast';
 
 function Register() {
     const navigate = useNavigate();
@@ -18,12 +19,15 @@ function Register() {
         try {
             const res = await api.post('/auth/register', { email, password, role });
             login(res.data.user, res.data.token);
+            toast.success('Registration successful!');
             navigate('/dashboard');
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 setError(err.response?.data?.error || 'Registration failed');
+                toast.error(err.response?.data?.error || 'Registration failed');
             } else {
                 setError('An unexpected error occurred');
+                toast.error('Registration failed');
             }
         }
     };

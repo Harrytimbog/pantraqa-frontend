@@ -4,6 +4,7 @@ import AuthLayout from '../../components/UI/AuthLayout';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function Login() {
     const navigate = useNavigate();
@@ -17,12 +18,15 @@ function Login() {
         try {
             const res = await api.post('/auth/login', { email, password });
             login(res.data.user, res.data.token);
+            toast.success('Login successful!');
             navigate('/dashboard');
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 setError(err.response?.data?.error || 'Login failed');
+                toast.error(err.response?.data?.error || 'Login failed');
             } else {
                 setError('An unexpected error occurred');
+                toast.error('Login failed');
             }
         }
     };
