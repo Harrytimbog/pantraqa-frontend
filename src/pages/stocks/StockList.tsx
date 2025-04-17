@@ -23,11 +23,20 @@ interface StockItem {
     };
 }
 
+interface Pagination {
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+    perPage: number;
+}
+
 type SortKey = 'name' | 'quantity' | 'updatedAt';
 type FilterStatus = 'all' | 'low' | 'ok';
 
 const StockList = () => {
     const [stocks, setStocks] = useState<StockItem[]>([]);
+    const [pagination, setPagination] = useState<Pagination | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [sortKey, setSortKey] = useState<SortKey>('updatedAt');
@@ -37,21 +46,23 @@ const StockList = () => {
 
     const { user } = useAuth();
 
-    useEffect(() => {
-        const fetchStock = async () => {
-            try {
-                const res = await api.get('/stocks');
-                setStocks(res.data.stocks);
-                setLoading(false);
-            } catch (err) {
-                console.error(err);
-                setError('Failed to fetch stock data');
-                setLoading(false);
-            }
-        };
+    const fetchStock = async (page: number = 1) => {
+        setLoading(true);
+        try {
+            const res = await api.get(`/stocks?page=${page}&limit=10`);
+            setStocks(res.data.stocks);
+            setPagination(res.data.pagination);
+        } catch (err) {
+            console.error(err);
+            setError('Failed to fetch stock data');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchStock();
-    }, []);
+    useEffect(() => {
+        fetchStock(currentPage);
+    }, [currentPage]);
 
     const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSortKey(e.target.value as SortKey);
@@ -68,16 +79,9 @@ const StockList = () => {
             return true;
         })
         .sort((a, b) => {
-            if (sortKey === 'name') {
-                return a.Drink.name.localeCompare(b.Drink.name);
-            }
-            if (sortKey === 'quantity') {
-                return b.quantity - a.quantity;
-            }
-            if (sortKey === 'updatedAt') {
-                return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-            }
-            return 0;
+            if (sortKey === 'name') return a.Drink.name.localeCompare(b.Drink.name);
+            if (sortKey === 'quantity') return b.quantity - a.quantity;
+            return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
         });
 
     const handleEditClick = (stock: StockItem) => {
@@ -90,8 +94,7 @@ const StockList = () => {
         try {
             await api.patch(`/stocks/${editingStockId}/threshold`, { threshold: newThreshold });
             toast.success('Threshold updated');
-            const updated = await api.get('/stocks');
-            setStocks(updated.data.stocks);
+            fetchStock(currentPage);
         } catch (err) {
             console.error(err);
             toast.error('Failed to update threshold');
@@ -108,21 +111,13 @@ const StockList = () => {
             <h1 className="text-2xl font-bold text-secondary mb-6 text-center">Stock Levels</h1>
             <div className="overflow-x-auto">
                 <div className="flex flex-wrap items-center gap-4 mb-4">
-                    <select
-                        value={sortKey}
-                        onChange={handleSortChange}
-                        className="border rounded px-3 py-2"
-                    >
+                    <select value={sortKey} onChange={handleSortChange} className="border rounded px-3 py-2">
                         <option value="updatedAt">Sort by: Updated</option>
                         <option value="name">Sort by: Drink Name</option>
                         <option value="quantity">Sort by: Quantity</option>
                     </select>
 
-                    <select
-                        value={filterStatus}
-                        onChange={handleFilterChange}
-                        className="border rounded px-3 py-2"
-                    >
+                    <select value={filterStatus} onChange={handleFilterChange} className="border rounded px-3 py-2">
                         <option value="all">All</option>
                         <option value="low">Low Stock</option>
                         <option value="ok">Stock OK</option>
@@ -134,6 +129,7 @@ const StockList = () => {
                         <tr>
                             <th className="px-4 py-2 text-left">Drink</th>
                             <th className="px-4 py-2 text-left">Size</th>
+                            <th className="px-4 py-2 text-left">Category</th>
                             <th className="px-4 py-2 text-left">Quantity</th>
                             <th className="px-4 py-2 text-left">Location</th>
                             <th className="px-4 py-2 text-left">Status</th>
@@ -150,9 +146,30 @@ const StockList = () => {
                                 onEditClick={handleEditClick}
                             />
                         ))}
-
                     </tbody>
                 </table>
+
+                {pagination && (
+                    <div className="flex justify-between items-center mt-6">
+                        <button
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                        >
+                            Previous
+                        </button>
+                        <span className="text-sm text-gray-700">
+                            Page {pagination.currentPage} of {pagination.totalPages}
+                        </span>
+                        <button
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pagination.totalPages))}
+                            disabled={currentPage === pagination.totalPages}
+                            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
 
             <EditThresholdModal

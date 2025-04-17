@@ -12,6 +12,7 @@ const StockRow = ({ stock, user, onEditClick }: Props) => {
         <tr className="border-t">
             <td className="px-4 py-2">{stock.Drink?.name}</td>
             <td className="px-4 py-2">{stock.Drink?.size}</td>
+            <td className="px-4 py-2">{stock.Drink?.category}</td>
             <td className="px-4 py-2">{stock.quantity}</td>
             <td className="px-4 py-2">{stock.StorageLocation?.name}</td>
             <td
