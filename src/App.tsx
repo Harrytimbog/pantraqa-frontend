@@ -5,19 +5,40 @@ import LoginPage from './pages/auth/Login';
 import Dashboard from './pages/Dashboard';
 import MainLayout from './layouts/MainLayout';
 import LearnMore from './pages/LearnMore';
+// import GuestOnlyRoute from './pages/auth/GuestOnlyRoute';
+import ProtectedRoute from './pages/auth/ProtectedRoute';
+import PublicRoute from './pages/auth/PublicRoute';
 
 function App() {
   return (
     <MainLayout>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/learn-more" element={<LearnMore />} />
+
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route path="/dashboard" element={
+          <ProtectedRoute><Dashboard /></ProtectedRoute>
+        } />
+
         <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </MainLayout>
+      </Routes>    </MainLayout>
   );
 }
 

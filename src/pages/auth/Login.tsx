@@ -1,10 +1,13 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
-import axios from 'axios';
 import AuthLayout from '../../components/UI/AuthLayout';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../lib/axios';
+import axios from 'axios';
 
 function Login() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,8 +15,8 @@ function Login() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/v1/auth/login', { email, password });
-            localStorage.setItem('token', res.data.token);
+            const res = await api.post('/auth/login', { email, password });
+            login(res.data.user, res.data.token);
             navigate('/dashboard');
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
