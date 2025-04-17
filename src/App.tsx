@@ -10,6 +10,7 @@ import ProtectedRoute from './pages/auth/ProtectedRoute';
 import PublicRoute from './pages/auth/PublicRoute';
 import StockIn from './pages/stocks/StockIn';
 import StockOut from './pages/stocks/StockOut';
+import StockList from './pages/stocks/StockList';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         } />
         <Route path="/stock-in" element={<ProtectedRoute><StockIn /></ProtectedRoute>} />
         <Route path="/stock-out" element={<ProtectedRoute><StockOut /></ProtectedRoute>} />
+        <Route path="/stocks" element={<PublicRoute><StockList /></PublicRoute>} />
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>    </MainLayout>
