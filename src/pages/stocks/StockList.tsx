@@ -1,5 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import api from '../../lib/axios';
+import toast from 'react-hot-toast';
+import EditThresholdModal from '../../components/UI/EditThresholdModal';
+import StockRow from '../../components/StockRow';
+import { useAuth } from '../../context/AuthContext';
 
 interface StockItem {
     id: number;
@@ -28,6 +32,10 @@ const StockList = () => {
     const [error, setError] = useState('');
     const [sortKey, setSortKey] = useState<SortKey>('updatedAt');
     const [filterStatus, setFilterStatus] = useState<FilterStatus>('all');
+    const [editingStockId, setEditingStockId] = useState<number | null>(null);
+    const [currentThreshold, setCurrentThreshold] = useState<number>(0);
+
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchStock = async () => {
@@ -72,6 +80,26 @@ const StockList = () => {
             return 0;
         });
 
+    const handleEditClick = (stock: StockItem) => {
+        setEditingStockId(stock.id);
+        setCurrentThreshold(stock.threshold);
+    };
+
+    const handleSaveThreshold = async (newThreshold: number) => {
+        if (!editingStockId) return;
+        try {
+            await api.patch(`/stocks/${editingStockId}/threshold`, { threshold: newThreshold });
+            toast.success('Threshold updated');
+            const updated = await api.get('/stocks');
+            setStocks(updated.data.stocks);
+        } catch (err) {
+            console.error(err);
+            toast.error('Failed to update threshold');
+        } finally {
+            setEditingStockId(null);
+        }
+    };
+
     if (loading) return <p className="text-center text-gray-500 mt-8">Loading stock data...</p>;
     if (error) return <p className="text-center text-red-500 mt-8">{error}</p>;
 
@@ -110,31 +138,29 @@ const StockList = () => {
                             <th className="px-4 py-2 text-left">Location</th>
                             <th className="px-4 py-2 text-left">Status</th>
                             <th className="px-4 py-2 text-left">Last Updated</th>
+                            <th className="px-4 py-2 text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredAndSortedStocks.map((stock) => (
-                            <tr key={stock.id} className="border-t">
-                                <td className="px-4 py-2">{stock.Drink?.name}</td>
-                                <td className="px-4 py-2">{stock.Drink?.size}</td>
-                                <td className="px-4 py-2">{stock.quantity}</td>
-                                <td className="px-4 py-2">{stock.StorageLocation?.name}</td>
-                                <td
-                                    className={`px-4 py-2 font-semibold ${stock.quantity <= stock.threshold
-                                        ? 'text-red-500'
-                                        : 'text-green-600'
-                                        }`}
-                                >
-                                    {stock.quantity <= stock.threshold ? 'Low' : 'OK'}
-                                </td>
-                                <td className="px-4 py-2 text-sm text-gray-500">
-                                    {new Date(stock.updatedAt).toLocaleString()}
-                                </td>
-                            </tr>
+                            <StockRow
+                                key={stock.id}
+                                stock={stock}
+                                user={user!}
+                                onEditClick={handleEditClick}
+                            />
                         ))}
+
                     </tbody>
                 </table>
             </div>
+
+            <EditThresholdModal
+                isOpen={editingStockId !== null}
+                currentThreshold={currentThreshold}
+                onClose={() => setEditingStockId(null)}
+                onSave={handleSaveThreshold}
+            />
         </div>
     );
 };

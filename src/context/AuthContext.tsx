@@ -1,7 +1,6 @@
-// context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 
-interface User {
+export interface User {
     id: number;
     email: string;
     role: 'staff' | 'manager' | 'admin';
