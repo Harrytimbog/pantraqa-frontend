@@ -40,10 +40,10 @@ function App() {
         <Route path="/dashboard" element={
           <ProtectedRoute><Dashboard /></ProtectedRoute>
         } />
-        <Route path="/stock-in" element={<ProtectedRoute><StockIn /></ProtectedRoute>} />
-        <Route path="/stock-out" element={<ProtectedRoute><StockOut /></ProtectedRoute>} />
-        <Route path="/stocks" element={<PublicRoute><StockList /></PublicRoute>} />
-        <Route path="/stocks-logs" element={<PublicRoute><StockLogs /></PublicRoute>} />
+        <Route path="/stocks-in" element={<ProtectedRoute><StockIn /></ProtectedRoute>} />
+        <Route path="/stocks-out" element={<ProtectedRoute><StockOut /></ProtectedRoute>} />
+        <Route path="/stocks" element={<ProtectedRoute><StockList /></ProtectedRoute>} />
+        <Route path="/stocks-logs" element={<ProtectedRoute><StockLogs /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>    </MainLayout>

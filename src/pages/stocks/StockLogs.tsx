@@ -1,64 +1,200 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import api from '../../lib/axios';
+import { format } from 'date-fns';
+import { FaTimes } from 'react-icons/fa';
+
+interface LogUser {
+    id: number;
+    email: string;
+}
+
+interface LogDrink {
+    id: number;
+    name: string;
+    size: string;
+    category: string;
+}
+
+interface LogLocation {
+    id: number;
+    name: string;
+    type: string;
+}
 
 interface StockLog {
     id: number;
     action: 'in' | 'out';
     quantity: number;
     createdAt: string;
-    User: { email: string };
-    Drink: { name: string; size: string };
-    StorageLocation: { name: string };
+    userId: number;
+    Drink: LogDrink;
+    StorageLocation: LogLocation;
 }
 
 const StockLogs = () => {
     const [logs, setLogs] = useState<StockLog[]>([]);
+    const [users, setUsers] = useState<LogUser[]>([]);
+    const [drinks, setDrinks] = useState<LogDrink[]>([]);
+    const [locations, setLocations] = useState<LogLocation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [filters, setFilters] = useState({
+        userId: '',
+        drinkId: '',
+        storageLocationId: '',
+        action: '',
+        dateFrom: '',
+        dateTo: '',
+    });
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
+    // Fetch filter options for users, drinks, and locations
     useEffect(() => {
-        const fetchLogs = async () => {
+        const fetchFilters = async () => {
             try {
-                const res = await api.get('/stocklogs');
-                setLogs(res.data.logs);
+                const [usersRes, drinksRes, locsRes] = await Promise.all([
+                    api.get('/users'),
+                    api.get('/drinks'),
+                    api.get('/storage-locations'),
+                ]);
+                setUsers(usersRes.data);
+                setDrinks(drinksRes.data.drinks || drinksRes.data);
+                setLocations(locsRes.data.locations || locsRes.data);
+                setLoading(false);
             } catch (err) {
-                console.error(err);
-                setError('Failed to load logs');
-            } finally {
+                console.error('Failed to load filter options', err);
                 setLoading(false);
             }
         };
-
-        fetchLogs();
+        fetchFilters();
     }, []);
+
+    // Fetch logs based on filters and pagination
+    const fetchLogs = useCallback(async () => {
+        setLoading(true);
+        try {
+            const query = new URLSearchParams({ page: page.toString(), ...filters }).toString();
+            const res = await api.get(`/stocklogs?${query}`);
+            if (res.data && res.data.logs && Array.isArray(res.data.logs)) {
+                setLogs(res.data.logs);
+                setTotalPages(res.data.totalPages || 1);
+            } else {
+                setError('Invalid response format');
+            }
+        } catch (err) {
+            console.error(err);
+            setError('Failed to load logs');
+        } finally {
+            setLoading(false);
+        }
+    }, [filters, page]);
+
+    useEffect(() => {
+        fetchLogs();
+    }, [filters, page, fetchLogs]);
+
+    const handleFilterChange = (key: string, value: string) => {
+        setFilters((prev) => ({ ...prev, [key]: value }));
+        setPage(1); // Reset to page 1 on filter change
+    };
+
+    const clearFilter = (key: string) => {
+        setFilters((prev) => ({ ...prev, [key]: '' }));
+    };
+
+    const renderBadge = (label: string, key: keyof typeof filters) =>
+        filters[key] && (
+            <span className="bg-gray-200 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                {label}: {filters[key]} <FaTimes onClick={() => clearFilter(key)} className="cursor-pointer text-xs" />
+            </span>
+        );
 
     if (loading) return <p className="text-center mt-10 text-gray-500">Loading logs...</p>;
     if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
     return (
-        <div className="max-w-4xl mx-auto py-10 px-4">
+        <div className="max-w-6xl mx-auto py-10 px-4">
             <h1 className="text-2xl font-bold mb-6 text-secondary text-center">Stock History Logs</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {/* User Dropdown */}
+                <select onChange={(e) => handleFilterChange('userId', e.target.value)} value={filters.userId} className="border rounded p-2">
+                    <option value="">All Users</option>
+                    {users.map((u) => <option key={u.id} value={u.id}>{u.email}</option>)}
+                </select>
+
+                {/* Drink Dropdown */}
+                <select onChange={(e) => handleFilterChange('drinkId', e.target.value)} value={filters.drinkId} className="border rounded p-2">
+                    <option value="">All Drinks</option>
+                    {drinks.map((d) => <option key={d.id} value={d.id}>{d.name} ({d.size})</option>)}
+                </select>
+
+                {/* Location Dropdown */}
+                <select onChange={(e) => handleFilterChange('storageLocationId', e.target.value)} value={filters.storageLocationId} className="border rounded p-2">
+                    <option value="">All Locations</option>
+                    {locations.map((loc) => <option key={loc.id} value={loc.id}>{loc.name}</option>)}
+                </select>
+
+                {/* Action Dropdown */}
+                <select onChange={(e) => handleFilterChange('action', e.target.value)} value={filters.action} className="border rounded p-2">
+                    <option value="">All Actions</option>
+                    <option value="in">In</option>
+                    <option value="out">Out</option>
+                </select>
+
+                {/* Date Range Inputs */}
+                <input type="date" value={filters.dateFrom} onChange={(e) => handleFilterChange('dateFrom', e.target.value)} className="border rounded p-2" />
+                <input type="date" value={filters.dateTo} onChange={(e) => handleFilterChange('dateTo', e.target.value)} className="border rounded p-2" />
+            </div>
+
+            {/* Applied Filters */}
+            <div className="mb-4 flex flex-wrap gap-3">
+                {renderBadge('User', 'userId')}
+                {renderBadge('Drink', 'drinkId')}
+                {renderBadge('Location', 'storageLocationId')}
+                {renderBadge('Action', 'action')}
+                {renderBadge('From', 'dateFrom')}
+                {renderBadge('To', 'dateTo')}
+            </div>
+
+            {/* Logs */}
             <ul className="space-y-4">
-                {logs.map((log) => {
-                    const date = new Date(log.createdAt).toLocaleString();
-                    return (
-                        <li key={log.id} className="bg-white shadow rounded p-4">
-                            <p>
-                                <span className="font-semibold text-primary">
-                                    {log.Drink.name} ({log.Drink.size})
-                                </span>{' '}
-                                was stocked{' '}
-                                <span className={log.action === 'in' ? 'text-green-600' : 'text-red-500'}>
-                                    {log.action}
-                                </span>{' '}
-                                by <span className="font-medium">{log.User.email}</span> at{' '}
-                                <span className="font-medium">{log.StorageLocation.name}</span> on{' '}
-                                <span className="text-sm text-gray-600">{date}</span>.
-                            </p>
-                        </li>
-                    );
-                })}
+                {logs.map((log) => (
+                    <li key={log.id} className="bg-white shadow rounded p-4">
+                        <p>
+                            <span className="font-semibold text-primary">
+                                {log.Drink.name} ({log.Drink.size})
+                            </span>{' '}
+                            was{' '}
+                            <span className={log.action === 'in' ? 'text-green-600' : 'text-red-500'}>
+                                stocked {log.action}
+                            </span>{' '}
+                            by <span className="font-medium">{users.find(u => u.id === log.userId)?.email}</span> at{' '}
+                            <span className="font-medium">{log.StorageLocation.name}</span> on{' '}
+                            <span className="text-sm text-gray-600">{format(new Date(log.createdAt), 'PPpp')}</span>.
+                        </p>
+                    </li>
+                ))}
             </ul>
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-8 gap-4">
+                <button
+                    disabled={page === 1}
+                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    className="px-4 py-2 bg-gray-100 rounded disabled:opacity-50"
+                >
+                    Prev
+                </button>
+                <span className="px-4 py-2">Page {page} of {totalPages}</span>
+                <button
+                    disabled={page === totalPages}
+                    onClick={() => setPage((prev) => prev + 1)}
+                    className="px-4 py-2 bg-gray-100 rounded disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 };
