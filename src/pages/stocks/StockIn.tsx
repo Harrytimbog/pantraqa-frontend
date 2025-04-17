@@ -1,6 +1,6 @@
 // src/pages/stocks/StockIn.tsx
 
-import StockForm from "./StockForm";
+import StockForm from "../../components/UI/StockForm";
 
 const StockIn = () => {
     return (

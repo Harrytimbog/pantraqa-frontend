@@ -1,4 +1,4 @@
-import StockForm from "./StockForm";
+import StockForm from "../../components/UI/StockForm";
 
 const StockOut = () => {
     return (
