@@ -2,6 +2,12 @@ import { useEffect, useState, useCallback } from 'react';
 import api from '../../lib/axios';
 import { format } from 'date-fns';
 import { FaTimes } from 'react-icons/fa';
+import Modal from 'react-modal';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register ChartJS components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 interface LogUser {
     id: number;
@@ -48,6 +54,9 @@ const StockLogs = () => {
     });
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Fetch filter options for users, drinks, and locations
     useEffect(() => {
@@ -110,6 +119,37 @@ const StockLogs = () => {
             </span>
         );
 
+    // Define chart data with proper typing
+    const chartData = {
+        labels: [...new Set(logs.map(log => log.Drink.name))],  // Unique drink names
+        datasets: [
+            {
+                label: 'Quantity In Stock',
+                data: logs
+                    .filter(log => log.action === 'in')  // Only "in" actions
+                    .reduce((acc: { [key: string]: number }, log) => {
+                        acc[log.Drink.name] = (acc[log.Drink.name] || 0) + log.quantity;
+                        return acc;
+                    }, {}), // Properly type the accumulator
+                backgroundColor: 'green',
+                borderColor: 'black',
+                borderWidth: 1,
+            },
+            {
+                label: 'Quantity Out of Stock',
+                data: logs
+                    .filter(log => log.action === 'out')  // Only "out" actions
+                    .reduce((acc: { [key: string]: number }, log) => {
+                        acc[log.Drink.name] = (acc[log.Drink.name] || 0) + log.quantity;
+                        return acc;
+                    }, {}), // Properly type the accumulator
+                backgroundColor: 'red',
+                borderColor: 'black',
+                borderWidth: 1,
+            },
+        ],
+    };
+
     if (loading) return <p className="text-center mt-10 text-gray-500">Loading logs...</p>;
     if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
 
@@ -157,6 +197,16 @@ const StockLogs = () => {
                 {renderBadge('To', 'dateTo')}
             </div>
 
+            {/* Button to open the modal for charts */}
+            <div className="flex justify-end mb-6">
+                <button
+                    onClick={() => setIsModalOpen(true)}  // Open modal for chart view
+                    className="px-5 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-300"
+                >
+                    View Charts
+                </button>
+            </div>
+
             {/* Logs */}
             <ul className="space-y-4">
                 {logs.map((log) => (
@@ -195,6 +245,26 @@ const StockLogs = () => {
                     Next
                 </button>
             </div>
+
+            {/* Modal to display charts */}
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                contentLabel="Stock Chart Modal"
+                className="modal-class relative bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full mx-auto my-4"
+                overlayClassName="overlay-class bg-gray-800 bg-opacity-50 fixed inset-0"
+            >
+                <div className="flex justify-end">
+                    <button
+                        onClick={() => setIsModalOpen(false)}
+                        className="px-4 py-2 text-white bg-red-500 rounded"
+                    >
+                        Close
+                    </button>
+                </div>
+                <h2 className="text-center text-xl mb-6">Stock Overview</h2>
+                <Bar data={chartData} options={{ responsive: true }} />
+            </Modal>
         </div>
     );
 };
