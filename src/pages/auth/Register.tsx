@@ -10,6 +10,7 @@ function Register() {
     const navigate = useNavigate();
     const { login } = useAuth();
     const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('manager');
     const [error, setError] = useState('');
@@ -17,7 +18,7 @@ function Register() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await api.post('/auth/register', { email, password, role });
+            const res = await api.post('/auth/register', { email, name, password, role });
             login(res.data.user, res.data.token);
             toast.success('Registration successful!');
             navigate('/stocks');
@@ -43,6 +44,14 @@ function Register() {
                         className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="name"
+                        placeholder="Name"
+                        className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         required
                     />
                     <input
