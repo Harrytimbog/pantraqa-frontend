@@ -12,6 +12,8 @@ import StockIn from './pages/stocks/StockIn';
 import StockOut from './pages/stocks/StockOut';
 import StockList from './pages/stocks/StockList';
 import StockLogs from './pages/stocks/StockLogs';
+import AllDrinks from './pages/drinks/AllDrinks';
+import CreateDrink from './pages/drinks/CreateDrink';
 
 function App() {
   return (
@@ -44,9 +46,13 @@ function App() {
         <Route path="/stocks-out" element={<ProtectedRoute><StockOut /></ProtectedRoute>} />
         <Route path="/stocks" element={<ProtectedRoute><StockList /></ProtectedRoute>} />
         <Route path="/stocks-logs" element={<ProtectedRoute><StockLogs /></ProtectedRoute>} />
+        <Route path="/drinks" element={<ProtectedRoute><AllDrinks /></ProtectedRoute>} />
+        <Route path="/add-drink" element={<ProtectedRoute><CreateDrink /></ProtectedRoute>} />
+
 
         <Route path="*" element={<Navigate to="/" />} />
-      </Routes>    </MainLayout>
+      </Routes>
+    </MainLayout>
   );
 }
 

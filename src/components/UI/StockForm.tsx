@@ -69,7 +69,7 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
             if (onSubmitSuccess) {
                 onSubmitSuccess();
             } else {
-                navigate('/dashboard'); // ✅ Default redirect
+                navigate('/stocks'); // ✅ Default redirect
             }
 
         } catch (err: unknown) {

@@ -15,3 +15,13 @@ export interface StockItem {
         type: string;
     };
 }
+
+
+export interface Drink {
+    id: number;
+    name: string;
+    size: string;
+    category: string;
+    createdAt: string;
+    updatedAt: string;
+}

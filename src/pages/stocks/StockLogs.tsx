@@ -5,6 +5,7 @@ import { FaTimes } from 'react-icons/fa';
 import Modal from 'react-modal';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { saveAs } from 'file-saver';
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -37,6 +38,15 @@ interface StockLog {
     StorageLocation: LogLocation;
 }
 
+interface Filters {
+    userId: string;
+    drinkId: string;
+    storageLocationId: string;
+    action: string;
+    dateFrom: string;
+    dateTo: string;
+}
+
 const StockLogs = () => {
     const [logs, setLogs] = useState<StockLog[]>([]);
     const [users, setUsers] = useState<LogUser[]>([]);
@@ -44,7 +54,7 @@ const StockLogs = () => {
     const [locations, setLocations] = useState<LogLocation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<Filters>({
         userId: '',
         drinkId: '',
         storageLocationId: '',
@@ -119,7 +129,7 @@ const StockLogs = () => {
             </span>
         );
 
-    // Define chart data with proper typing
+    // Define chart data with explicit type for accumulator
     const chartData = {
         labels: [...new Set(logs.map(log => log.Drink.name))],  // Unique drink names
         datasets: [
@@ -127,10 +137,10 @@ const StockLogs = () => {
                 label: 'Quantity In Stock',
                 data: logs
                     .filter(log => log.action === 'in')  // Only "in" actions
-                    .reduce((acc: { [key: string]: number }, log) => {
+                    .reduce<{ [key: string]: number }>((acc, log) => {
                         acc[log.Drink.name] = (acc[log.Drink.name] || 0) + log.quantity;
                         return acc;
-                    }, {}), // Properly type the accumulator
+                    }, {}),
                 backgroundColor: 'green',
                 borderColor: 'black',
                 borderWidth: 1,
@@ -139,15 +149,49 @@ const StockLogs = () => {
                 label: 'Quantity Out of Stock',
                 data: logs
                     .filter(log => log.action === 'out')  // Only "out" actions
-                    .reduce((acc: { [key: string]: number }, log) => {
+                    .reduce<{ [key: string]: number }>((acc, log) => {
                         acc[log.Drink.name] = (acc[log.Drink.name] || 0) + log.quantity;
                         return acc;
-                    }, {}), // Properly type the accumulator
+                    }, {}),
                 backgroundColor: 'red',
                 borderColor: 'black',
                 borderWidth: 1,
             },
         ],
+    };
+
+    const exportPDF = async () => {
+        try {
+            const queryParams = new URLSearchParams({
+                ...filters,
+                dateFrom: filters.dateFrom || '',
+                dateTo: filters.dateTo || '',
+            }).toString();
+            const response = await api.get(`/stocklogs/export/pdf?${queryParams}`, {
+                responseType: 'blob',
+            });
+            const file = new Blob([response.data], { type: 'application/pdf' });
+            saveAs(file, 'stocklogs.pdf');
+        } catch (error) {
+            console.error('Error exporting PDF:', error);
+        }
+    };
+
+    const exportCSV = async () => {
+        try {
+            const queryParams = new URLSearchParams({
+                ...filters,
+                dateFrom: filters.dateFrom || '',
+                dateTo: filters.dateTo || '',
+            }).toString();
+            const response = await api.get(`/stocklogs?${queryParams}`, {
+                responseType: 'blob',
+            });
+            const file = new Blob([response.data], { type: 'text/csv' });
+            saveAs(file, 'stocklogs.csv');
+        } catch (error) {
+            console.error('Error exporting CSV:', error);
+        }
     };
 
     if (loading) return <p className="text-center mt-10 text-gray-500">Loading logs...</p>;
@@ -195,6 +239,22 @@ const StockLogs = () => {
                 {renderBadge('Action', 'action')}
                 {renderBadge('From', 'dateFrom')}
                 {renderBadge('To', 'dateTo')}
+            </div>
+
+            {/* Export Buttons */}
+            <div className="flex justify-end mb-6 gap-4">
+                <button
+                    onClick={exportPDF}
+                    className="px-5 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all duration-300"
+                >
+                    Export PDF
+                </button>
+                <button
+                    onClick={exportCSV}
+                    className="px-5 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-all duration-300"
+                >
+                    Export CSV
+                </button>
             </div>
 
             {/* Button to open the modal for charts */}
@@ -251,7 +311,7 @@ const StockLogs = () => {
                 isOpen={isModalOpen}
                 onRequestClose={() => setIsModalOpen(false)}
                 contentLabel="Stock Chart Modal"
-                className="modal-class relative bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full mx-auto my-4"
+                className="modal-class relative bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full mx-auto my-auto"
                 overlayClassName="overlay-class bg-gray-800 bg-opacity-50 fixed inset-0"
             >
                 <div className="flex justify-end">

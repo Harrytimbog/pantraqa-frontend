@@ -6,7 +6,7 @@ export default function GetStartedButton() {
 
     const handleClick = () => {
         if (isAuthenticated) {
-            navigate('/dashboard');
+            navigate('/stocks');
         } else {
             navigate('/login');
         }

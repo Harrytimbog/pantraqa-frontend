@@ -20,7 +20,7 @@ function Register() {
             const res = await api.post('/auth/register', { email, password, role });
             login(res.data.user, res.data.token);
             toast.success('Registration successful!');
-            navigate('/dashboard');
+            navigate('/stocks');
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 setError(err.response?.data?.error || 'Registration failed');

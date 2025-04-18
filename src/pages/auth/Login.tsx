@@ -19,7 +19,7 @@ function Login() {
             const res = await api.post('/auth/login', { email, password });
             login(res.data.user, res.data.token);
             toast.success('Login successful!');
-            navigate('/dashboard');
+            navigate('/stocks');
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 setError(err.response?.data?.error || 'Login failed');
