@@ -1,4 +1,3 @@
-// src/components/StockForm.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
@@ -69,7 +68,7 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
             if (onSubmitSuccess) {
                 onSubmitSuccess();
             } else {
-                navigate('/stocks'); // ✅ Default redirect
+                navigate('/stocks');
             }
 
         } catch (err: unknown) {
@@ -93,7 +92,7 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
 
     return (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow p-6 rounded space-y-4">
-            <h2 className="text-lg font-bold text-secondary">Stock {action === 'in' ? 'In' : 'Out'} Form</h2>
+            <h1 className="text-lg font-bold text-secondary text-center">Stock {action === 'in' ? 'In' : 'Out'}</h1>
 
             <select
                 value={drinkId}

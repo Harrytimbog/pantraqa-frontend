@@ -2,12 +2,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     const { user, logout, loading } = useAuth();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isStockDropdownOpen, setIsStockDropdownOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -19,6 +20,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const toggleStockDropdown = () => {
+        setIsStockDropdownOpen(!isStockDropdownOpen);
     };
 
     return (
@@ -41,7 +46,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     ></div>
                 )}
 
-                {/* Desktop Navigation - unchanged from original */}
+                {/* Desktop Navigation */}
                 <nav className="hidden lg:flex lg:space-x-4">
                     {!user ? (
                         <Link
@@ -56,19 +61,46 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                                 <>
                                     <Link
                                         to="/dashboard"
-                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-5 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
                                     >
                                         Dashboard
                                     </Link>
+
+                                    {/* Stock Dropdown */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={toggleStockDropdown}
+                                            className="text-indigo-600 font-semibold px-4 py-2 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white transition-colors duration-300 ease-in-out transform hover:scale-105 flex items-center"
+                                        >
+                                            Manage Stock <FaChevronDown className="ml-2" />
+                                        </button>
+                                        {isStockDropdownOpen && (
+                                            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48">
+                                                <Link
+                                                    to="/stocks-in"
+                                                    className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                                >
+                                                    Stock In
+                                                </Link>
+                                                <Link
+                                                    to="/stocks-out"
+                                                    className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                                >
+                                                    Stock Out
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+
                                     <Link
                                         to="/stocks-logs"
-                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-5 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
                                     >
                                         Stock Logs
                                     </Link>
                                     <Link
                                         to="/add-drink"
-                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-5 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
                                     >
                                         Add Drink
                                     </Link>
@@ -77,7 +109,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
                             <Link
                                 to="/drinks"
-                                className="text-teal-600 font-semibold hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-500 text-primary hover:text-white px-5 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                                className="text-teal-600 font-semibold hover:bg-gradient-to-r hover:from-teal-600 hover:to-teal-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
                             >
                                 All Drinks
                             </Link>
@@ -93,7 +125,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                     )}
                 </nav>
 
-                {/* Mobile Navigation - separate from desktop */}
+                {/* Mobile Navigation */}
                 <nav className={`
                     ${isMenuOpen ? 'fixed top-0 right-0 w-64 h-full bg-white shadow-lg p-6 flex flex-col space-y-4 z-40' : 'hidden'}
                 `}>
@@ -129,6 +161,20 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                                         onClick={toggleMenu}
                                     >
                                         Add Drink
+                                    </Link>
+                                    <Link
+                                        to="/stocks-in"
+                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                        onClick={toggleMenu}
+                                    >
+                                        Stock In
+                                    </Link>
+                                    <Link
+                                        to="/stocks-out"
+                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                        onClick={toggleMenu}
+                                    >
+                                        Stock Out
                                     </Link>
                                 </>
                             )}
