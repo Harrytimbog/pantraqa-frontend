@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import api from '../../lib/axios';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -23,7 +22,6 @@ interface Props {
 }
 
 const StockForm = ({ action, onSubmitSuccess }: Props) => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const [drinks, setDrinks] = useState<Drink[]>([]);
     const [locations, setLocations] = useState<Location[]>([]);
@@ -83,10 +81,6 @@ const StockForm = ({ action, onSubmitSuccess }: Props) => {
             }
         }
     };
-
-    if (!user || (user.role !== 'manager' && user.role !== 'admin')) {
-        return <p className="text-red-600">You do not have permission to perform this action.</p>;
-    }
 
     if (loading) return <p className="text-gray-500">Loading options...</p>;
 

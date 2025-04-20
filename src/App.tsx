@@ -14,6 +14,8 @@ import StockList from './pages/stocks/StockList';
 import StockLogs from './pages/stocks/StockLogs';
 import AllDrinks from './pages/drinks/AllDrinks';
 import CreateDrink from './pages/drinks/CreateDrink';
+import CreateStorageLocation from './pages/storage-location/CreateStorageLocation';
+import AllUsers from './pages/admin/AllUsers';
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
         <Route path="/stocks-logs" element={<ProtectedRoute><StockLogs /></ProtectedRoute>} />
         <Route path="/drinks" element={<ProtectedRoute><AllDrinks /></ProtectedRoute>} />
         <Route path="/add-drink" element={<ProtectedRoute><CreateDrink /></ProtectedRoute>} />
+        <Route path="/add-storage-location" element={<ProtectedRoute><CreateStorageLocation /></ProtectedRoute>} />
+        <Route path="/all-users" element={<ProtectedRoute><AllUsers /></ProtectedRoute>} />
 
 
         <Route path="*" element={<Navigate to="/" />} />

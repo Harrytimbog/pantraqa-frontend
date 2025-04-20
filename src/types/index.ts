@@ -25,3 +25,14 @@ export interface Drink {
     createdAt: string;
     updatedAt: string;
 }
+
+
+export interface User {
+    id: number;
+    email: string;
+    name: string;
+    password: string;
+    role: 'admin' | 'manager' | 'staff';
+    createdAt: string;
+    updatedAt: string;
+}
