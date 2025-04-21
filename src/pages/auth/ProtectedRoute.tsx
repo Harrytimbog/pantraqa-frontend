@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-white text-gray-500">
-                <LoadingSpinner size={32} />
+                <LoadingSpinner />
             </div>
         );
     }

@@ -3,6 +3,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import { FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import PageLoader from '../pages/PageLoader';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
     const { user, logout, loading } = useAuth();
@@ -16,7 +17,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         navigate('/login');
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <PageLoader message='Loading Pantraqa' />;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -30,7 +31,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-white to-indigo-50">
             <header className="flex justify-between items-center p-4 bg-transparent z-50 relative">
                 <Link to="/" className="text-2xl font-bold text-primary tracking-wide">
-                    Pantraqa
+                    <img
+                        src="/images/logo.png"
+                        alt="Pantraqa"
+                        className="h-15 w-auto"
+                        loading="lazy"
+                    />
                 </Link>
 
                 {/* Hamburger Icon for mobile */}
