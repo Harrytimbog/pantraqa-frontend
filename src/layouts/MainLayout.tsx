@@ -57,47 +57,53 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                     ) : (
                         <>
+                            <Link
+                                to="/dashboard"
+                                className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                Dashboard
+                            </Link>
+
+                            {/* Stock Dropdown */}
+                            <div className="relative">
+                                <button
+                                    onClick={toggleStockDropdown}
+                                    className="text-indigo-600 font-semibold px-4 py-2 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white transition-colors duration-300 ease-in-out transform hover:scale-105 flex items-center"
+                                >
+                                    Manage Stock <FaChevronDown className="ml-2" />
+                                </button>
+                                {isStockDropdownOpen && (
+                                    <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48">
+                                        <Link
+                                            to="/stocks"
+                                            className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                        >
+                                            Available Stocks
+                                        </Link>
+                                        <Link
+                                            to="/stocks-in"
+                                            className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                        >
+                                            Stock In
+                                        </Link>
+                                        <Link
+                                            to="/stocks-out"
+                                            className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                        >
+                                            Stock Out
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+
+                            <Link
+                                to="/stocks-logs"
+                                className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
+                            >
+                                Stock Logs
+                            </Link>
                             {(user.role === 'admin' || user.role === 'manager') && (
                                 <>
-                                    <Link
-                                        to="/dashboard"
-                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
-                                    >
-                                        Dashboard
-                                    </Link>
-
-                                    {/* Stock Dropdown */}
-                                    <div className="relative">
-                                        <button
-                                            onClick={toggleStockDropdown}
-                                            className="text-indigo-600 font-semibold px-4 py-2 hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white transition-colors duration-300 ease-in-out transform hover:scale-105 flex items-center"
-                                        >
-                                            Manage Stock <FaChevronDown className="ml-2" />
-                                        </button>
-                                        {isStockDropdownOpen && (
-                                            <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-48">
-                                                <Link
-                                                    to="/stocks-in"
-                                                    className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                                >
-                                                    Stock In
-                                                </Link>
-                                                <Link
-                                                    to="/stocks-out"
-                                                    className="block px-5 py-2 text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                                >
-                                                    Stock Out
-                                                </Link>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <Link
-                                        to="/stocks-logs"
-                                        className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
-                                    >
-                                        Stock Logs
-                                    </Link>
                                     <Link
                                         to="/add-drink"
                                         className="text-indigo-600 font-semibold hover:bg-gradient-to-r hover:from-indigo-600 hover:to-indigo-500 text-primary hover:text-white px-4 py-2 transition-colors duration-300 ease-in-out transform hover:scale-105"
@@ -139,42 +145,43 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                         </Link>
                     ) : (
                         <>
+                            <Link
+                                to="/dashboard"
+                                className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                onClick={toggleMenu}
+                            >
+                                Dashboard
+                            </Link>
+                            <Link
+                                to="/stocks-logs"
+                                className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                onClick={toggleMenu}
+                            >
+                                Stock Logs
+                            </Link>
+
+                            <Link
+                                to="/stocks-in"
+                                className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                onClick={toggleMenu}
+                            >
+                                Stock In
+                            </Link>
+                            <Link
+                                to="/stocks-out"
+                                className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
+                                onClick={toggleMenu}
+                            >
+                                Stock Out
+                            </Link>
                             {(user.role === 'admin' || user.role === 'manager') && (
                                 <>
-                                    <Link
-                                        to="/dashboard"
-                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                        onClick={toggleMenu}
-                                    >
-                                        Dashboard
-                                    </Link>
-                                    <Link
-                                        to="/stocks-logs"
-                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                        onClick={toggleMenu}
-                                    >
-                                        Stock Logs
-                                    </Link>
                                     <Link
                                         to="/add-drink"
                                         className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
                                         onClick={toggleMenu}
                                     >
                                         Add Drink
-                                    </Link>
-                                    <Link
-                                        to="/stocks-in"
-                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                        onClick={toggleMenu}
-                                    >
-                                        Stock In
-                                    </Link>
-                                    <Link
-                                        to="/stocks-out"
-                                        className="block px-5 py-2 rounded-md text-indigo-600 font-semibold hover:bg-indigo-100 transition-colors duration-300"
-                                        onClick={toggleMenu}
-                                    >
-                                        Stock Out
                                     </Link>
                                 </>
                             )}

@@ -12,7 +12,7 @@ function Register() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('manager');
+    const [role, setRole] = useState('staff');
     const [error, setError] = useState('');
 
     const handleRegister = async (e: React.FormEvent) => {
@@ -67,7 +67,6 @@ function Register() {
                         onChange={(e) => setRole(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                     >
-                        <option value="manager">Manager</option>
                         <option value="staff">Staff</option>
                     </select>
                     {error && <p className="text-red-600 text-sm">{error}</p>}
