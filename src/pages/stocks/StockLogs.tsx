@@ -13,6 +13,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 interface LogUser {
     id: number;
     email: string;
+    name: string;
 }
 
 interface LogDrink {
@@ -184,7 +185,7 @@ const StockLogs = () => {
                 dateFrom: filters.dateFrom || '',
                 dateTo: filters.dateTo || '',
             }).toString();
-            const response = await api.get(`/stocklogs?${queryParams}`, {
+            const response = await api.get(`/stocklogs/export/csv?${queryParams}`, {
                 responseType: 'blob',
             });
             const file = new Blob([response.data], { type: 'text/csv' });
@@ -279,7 +280,7 @@ const StockLogs = () => {
                             <span className={log.action === 'in' ? 'text-green-600' : 'text-red-500'}>
                                 stocked {log.action}
                             </span>{' '}
-                            by <span className="font-medium">{users.find(u => u.id === log.userId)?.email}</span> at{' '}
+                            by <span className="font-medium">{users.find(u => u.id === log.userId)?.name}</span> at{' '}
                             <span className="font-medium">{log.StorageLocation.name}</span> on{' '}
                             <span className="text-sm text-gray-600">{format(new Date(log.createdAt), 'PPpp')}</span>.
                         </p>
