@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const CreateDrink = () => {
     const [drinkName, setDrinkName] = useState('');
     const [drinkSize, setDrinkSize] = useState('');
     const [drinkCategory, setDrinkCategory] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,6 +18,7 @@ const CreateDrink = () => {
                 category: drinkCategory,
             });
             toast.success('Drink created successfully!');
+            navigate('/drinks');
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(error.message || 'Error creating drink!');

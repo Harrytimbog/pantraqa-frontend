@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateStorageLocation = () => {
     const [locationName, setLocationName] = useState('');
     const [locationType, setLocationType] = useState('pantry');
     const [description, setDescription] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,6 +23,8 @@ const CreateStorageLocation = () => {
             if (response.status === 201) {
                 toast.success('Storage location created successfully!');
             }
+
+            navigate('/dashboard');
         } catch (error: unknown) {
             // Handling error
             if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.error) {

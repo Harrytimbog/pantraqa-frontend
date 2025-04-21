@@ -33,6 +33,10 @@ function Register() {
         }
     };
 
+    const roleDisplayNames = {
+        staff: 'Runner',
+    };
+
     return (
         <AuthLayout>
             <div className="max-w-md mx-auto mt-20 bg-white p-6 rounded shadow-lg">
@@ -67,7 +71,7 @@ function Register() {
                         onChange={(e) => setRole(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-accent"
                     >
-                        <option value="staff">Staff</option>
+                        <option value="staff">{roleDisplayNames.staff}</option>
                     </select>
                     {error && <p className="text-red-600 text-sm">{error}</p>}
                     <button

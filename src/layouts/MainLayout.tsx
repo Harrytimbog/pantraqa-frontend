@@ -216,7 +216,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 </nav>
             </header>
 
-            <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
+            <Toaster position="bottom-right" toastOptions={{ duration: 4000 }} />
             <main className="bg-transparent">{children}</main>
         </div>
     );
