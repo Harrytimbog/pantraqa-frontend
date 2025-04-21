@@ -92,13 +92,13 @@ const Dashboard = () => {
 
                         {user.role === 'staff' && (
                             <Link
-                                to="/inventory"
+                                to="/stocks"
                                 className="flex items-center justify-center space-x-2 px-5 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-400 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                 </svg>
-                                <span>View Inventory</span>
+                                <span>View Stocks</span>
                             </Link>
                         )}
                     </div>
