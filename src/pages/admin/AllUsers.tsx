@@ -55,6 +55,21 @@ const AllUsers = () => {
         }
     };
 
+    // Handle user deletion (async)
+    const handleDeleteUser = async (userId: number) => {
+        try {
+            await api.delete(`/users/${userId}`);
+            toast.success('User deleted successfully!');
+            setUsers(users.filter(user => user.id !== userId));
+        } catch (err) {
+            if (err instanceof Error) {
+                toast.error(err.message || 'Failed to delete user');
+            } else {
+                toast.error('Failed to delete user');
+            }
+        }
+    };
+
     if (loading) return <p className="text-gray-500">Loading users...</p>;
     if (error) return <p className="text-red-600">{error}</p>;
 
@@ -91,6 +106,15 @@ const AllUsers = () => {
                                             <option value="manager">Manager</option>
                                             <option value="admin">Admin</option>
                                         </select>
+                                    )}
+                                    {/* Only show "Delete" for non-admin users */}
+                                    {user.role !== 'admin' && (
+                                        <button
+                                            onClick={() => handleDeleteUser(user.id)}
+                                            className="ml-4 text-red-500 hover:underline"
+                                        >
+                                            Delete
+                                        </button>
                                     )}
                                 </td>
                             </tr>
