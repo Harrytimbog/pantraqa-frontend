@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import PageLoader from '../PageLoader';
 
 interface User {
     id: number;
@@ -70,7 +71,7 @@ const AllUsers = () => {
         }
     };
 
-    if (loading) return <p className="text-gray-500">Loading users...</p>;
+    if (loading) return <PageLoader message="Loading Users..." />;
     if (error) return <p className="text-red-600">{error}</p>;
 
     return (

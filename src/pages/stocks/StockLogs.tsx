@@ -207,7 +207,7 @@ const StockLogs = () => {
         dateFrom: filters.dateFrom || "",
         dateTo: filters.dateTo || "",
       }).toString();
-      const response = await api.get(`/stocklogs?${queryParams}`, {
+      const response = await api.get(`/stocklogs/export/csv?${queryParams}`, {
         responseType: "blob",
       });
       const file = new Blob([response.data], { type: "text/csv" });
