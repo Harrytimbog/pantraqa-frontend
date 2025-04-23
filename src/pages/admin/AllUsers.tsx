@@ -14,6 +14,12 @@ interface User {
   updatedAt: string;
 }
 
+// Helper to display roles
+const displayRole = (role: string) => {
+  if (role === "staff") return "Runner";
+  return role.charAt(0).toUpperCase() + role.slice(1);
+};
+
 const AllUsers = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +103,9 @@ const AllUsers = () => {
               <tr key={user.id} className="border-b">
                 <td className="py-2 px-4 whitespace-nowrap">{user.email}</td>
                 <td className="py-2 px-4 whitespace-nowrap">{user.name}</td>
-                <td className="py-2 px-4 whitespace-nowrap">{user.role}</td>
+                <td className="py-2 px-4 whitespace-nowrap">
+                  {displayRole(user.role)}
+                </td>
                 <td className="py-2 px-4 whitespace-nowrap">
                   {user.role !== "admin" && (
                     <select
@@ -110,7 +118,7 @@ const AllUsers = () => {
                       }
                       className="px-2 py-1 rounded-md border border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="staff">Staff</option>
+                      <option value="staff">Runner</option>
                       <option value="manager">Manager</option>
                       <option value="admin">Admin</option>
                     </select>
