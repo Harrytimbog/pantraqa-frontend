@@ -284,28 +284,44 @@ const StockLogs = () => {
         </select>
 
         {/* Date Range Inputs */}
-        <div className="relative flex items-center">
-          <input
-            type="date"
-            placeholder="Date From"
-            aria-label="Date From"
-            value={filters.dateFrom}
-            onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
-            className="border rounded p-2 pr-10 w-full"
-          />
-          <FiCalendar className="absolute right-3 text-gray-500 pointer-events-none" />
+        <div className="flex flex-col">
+          <label
+            htmlFor="date-from"
+            className="mb-1 text-sm font-medium text-gray-700"
+          >
+            Date From
+          </label>
+          <div className="relative flex items-center">
+            <input
+              id="date-from"
+              type="date"
+              aria-label="Date From"
+              value={filters.dateFrom}
+              onChange={(e) => handleFilterChange("dateFrom", e.target.value)}
+              className="border rounded p-2 pr-10 w-full"
+            />
+            <FiCalendar className="absolute right-3 text-gray-500 pointer-events-none" />
+          </div>
         </div>
 
-        <div className="relative flex items-center">
-          <input
-            type="date"
-            placeholder="Date To"
-            aria-label="Date To"
-            value={filters.dateTo}
-            onChange={(e) => handleFilterChange("dateTo", e.target.value)}
-            className="border rounded p-2 pr-10 w-full"
-          />
-          <FiCalendar className="absolute right-3 text-gray-500 pointer-events-none" />
+        <div className="flex flex-col">
+          <label
+            htmlFor="date-to"
+            className="mb-1 text-sm font-medium text-gray-700"
+          >
+            Date To
+          </label>
+          <div className="relative flex items-center">
+            <input
+              id="date-to"
+              type="date"
+              aria-label="Date To"
+              value={filters.dateTo}
+              onChange={(e) => handleFilterChange("dateTo", e.target.value)}
+              className="border rounded p-2 pr-10 w-full"
+            />
+            <FiCalendar className="absolute right-3 text-gray-500 pointer-events-none" />
+          </div>
         </div>
       </div>
 
