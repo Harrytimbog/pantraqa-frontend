@@ -44,8 +44,8 @@ VITE_API_BASE_URL=http://localhost:5000/api/v1
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/pantraqa-client.git
-cd pantraqa-client
+git clone https://github.com/Harrytimbog/pantraqa-frontend.git
+cd pantraqa-frontend
 ```
 
 Install dependencies:
