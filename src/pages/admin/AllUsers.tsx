@@ -19,7 +19,6 @@ const AllUsers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
 
-  // Fetch all users from the backend
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -39,7 +38,6 @@ const AllUsers = () => {
     fetchUsers();
   }, []);
 
-  // Handle role change (async)
   const handleRoleChange = async (
     userId: number,
     newRole: "staff" | "manager" | "admin"
@@ -61,7 +59,6 @@ const AllUsers = () => {
     }
   };
 
-  // Handle user deletion (async)
   const handleDeleteUser = async (userId: number) => {
     try {
       await api.delete(`/admin/${userId}`);
@@ -81,25 +78,27 @@ const AllUsers = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-white to-indigo-50 p-4">
-      <h1 className="text-3xl font-bold mb-6 text-primary">All Users</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-primary">
+        All Users
+      </h1>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
-        <table className="w-full text-left">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-4xl overflow-x-auto">
+        <table className="min-w-full text-left">
           <thead>
             <tr className="bg-indigo-600 text-white">
-              <th className="py-2 px-4">Email</th>
-              <th className="py-2 px-4">Name</th>
-              <th className="py-2 px-4">Role</th>
-              <th className="py-2 px-4">Action</th>
+              <th className="py-2 px-4 whitespace-nowrap">Email</th>
+              <th className="py-2 px-4 whitespace-nowrap">Name</th>
+              <th className="py-2 px-4 whitespace-nowrap">Role</th>
+              <th className="py-2 px-4 whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.id} className="border-b">
-                <td className="py-2 px-4">{user.email}</td>
-                <td className="py-2 px-4">{user.name}</td>
-                <td className="py-2 px-4">{user.role}</td>
-                <td className="py-2 px-4">
+                <td className="py-2 px-4 whitespace-nowrap">{user.email}</td>
+                <td className="py-2 px-4 whitespace-nowrap">{user.name}</td>
+                <td className="py-2 px-4 whitespace-nowrap">{user.role}</td>
+                <td className="py-2 px-4 whitespace-nowrap">
                   {user.role !== "admin" && (
                     <select
                       value={user.role}
@@ -109,18 +108,17 @@ const AllUsers = () => {
                           e.target.value as "staff" | "manager" | "admin"
                         )
                       }
-                      className="px-4 py-2 rounded-md border border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                      className="px-2 py-1 rounded-md border border-indigo-500 focus:ring-2 focus:ring-indigo-500"
                     >
                       <option value="staff">Staff</option>
                       <option value="manager">Manager</option>
                       <option value="admin">Admin</option>
                     </select>
                   )}
-                  {/* Only show "Delete" for non-admin users */}
                   {user.role !== "admin" && (
                     <button
                       onClick={() => handleDeleteUser(user.id)}
-                      className="ml-4 text-red-500 hover:underline"
+                      className="ml-2 text-red-500 hover:underline"
                     >
                       Delete
                     </button>
