@@ -1,54 +1,73 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Pantraqa – Frontend
 
-Currently, two official plugins are available:
+Pantraqa is a modern, responsive inventory management web application built with **React** and **Tailwind CSS**. Designed for hospitality teams, it allows for real-time control over beverage stock across suite pantries and storage locations.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Features
 
-## Expanding the ESLint configuration
+- 🔐 Role-based access control (Admin, Manager, Staff)
+- ⚙️ Dynamic navigation with conditionally rendered routes
+- 📱 Responsive design for mobile, tablet, and desktop
+- 💅 Smooth UI transitions and modern visuals
+- 🛠 Built with React + Tailwind CSS
+- 📦 Axios for API integration
+- 🔄 React Context for global auth state
+- 🔔 Toast notifications for real-time feedback
+- 📋 Form validation and state management
+- 🧪 Easy-to-extend component structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Tech Stack
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **React** (Vite)
+- **TypeScript**
+- **Tailwind CSS**
+- **React Router DOM**
+- **Axios**
+- **React Icons**
+- **React Toastify**
+- **React Context API**
+
+## 📸 Screenshots
+
+*(Coming soon: UI screenshots demonstrating key features)*
+
+## 🔧 Getting Started
+
+### 🛠 Environment Variable
+
+Create a `.env` file in the root directory with the following:
+
+```
+VITE_API_BASE_URL=http://localhost:5000/api/v1
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Clone the repository:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+git clone https://github.com/your-username/pantraqa-client.git
+cd pantraqa-client
 ```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+## 🌐 Live Demo
+
+[https://pantraqa.vercel.app/](https://pantraqa.vercel.app/)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙌 Acknowledgements
+
+Built and maintained by [Timilehin Arigbede](https://github.com/harrytimbog).
