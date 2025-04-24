@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import BackgroundIcons from "../components/BackgroundIcons";
 
 export default function LearnMore() {
@@ -32,12 +33,12 @@ export default function LearnMore() {
                 </div>
 
                 <div className="mt-12">
-                    <a
-                        href="/register"
+                    <Link
+                        to="/login"
                         className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium rounded-md shadow-md hover:from-purple-700 hover:to-pink-600 transition"
                     >
                         Get Started
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
