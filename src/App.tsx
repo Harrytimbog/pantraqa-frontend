@@ -16,6 +16,7 @@ import AllDrinks from './pages/drinks/AllDrinks';
 import CreateDrink from './pages/drinks/CreateDrink';
 import CreateStorageLocation from './pages/storage-location/CreateStorageLocation';
 import AllUsers from './pages/admin/AllUsers';
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -53,8 +54,7 @@ function App() {
         <Route path="/add-storage-location" element={<ProtectedRoute><CreateStorageLocation /></ProtectedRoute>} />
         <Route path="/all-users" element={<ProtectedRoute><AllUsers /></ProtectedRoute>} />
 
-
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </MainLayout>
   );
